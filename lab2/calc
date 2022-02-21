@@ -1,0 +1,76 @@
+// include parts of the C standard library
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+
+// type declaration for stack of doubles
+  struct double_stack {
+    double * items;
+    int max_size;
+    int top;
+  };
+
+// create a new empty stack
+  struct double_stack * double_stack_new(int max_size){
+    struct double_stack * result;
+
+    // allocate space for the stack header
+    result = malloc(sizeof(struct double_stack));
+    result->max_size = max_size;
+    result->top = 0;
+
+    // allocate space for the data stored in the stack
+    result->items = malloc(sizeof(double)*max_size);
+
+    // return a pointer to the newly-allocated stack
+    return result;
+  }
+
+// push a value onto the stack
+void double_stack_push(struct double_stack * this, double value){
+	if(this->top == this->max_size) // Checking Array is full or not.
+  {
+		printf("There is an overflow.\n");
+	}
+	else
+	{
+		this->items[this->top] = value;
+		this->top++;
+	}
+	return;
+}
+
+// pop a value from the stack
+double double_stack_pop(struct double_stack * this){
+	int value;
+	if(this->top == 0) // Checking Array is empty or not.
+	{
+		printf("The stack is empty.\n");
+		return -1;
+	}
+	value = this->items[this->top -1];
+	this->top -= 1; //	top = top - 1
+	return value;
+}
+
+int main(int argc, char ** argv){
+  int i;
+  struct double_stack* myStack = double_stack_new(3);
+
+  if ( argc == 1 ) {
+    printf("Please try adding some command-line parameters\n");
+    printf("Usage: %s <param1> <param2> ...\n", argv[0]);
+    exit(1);
+  }
+
+  printf("The number of command line parameters is stored in argc: %d\n", argc);
+  printf("The value of argc counts the name of the program itself as a parameter\n");
+  printf("The name of the program is stored in argv[0]: %s\n", argv[0]);
+  printf("The parameters are:\n");
+  for ( i = 1; i < argc; i++ ) {
+    double_stack_push(myStack, argv[i]);
+    printf("%s has been pushed to the stack.", argv[i]);
+  }
+
+  return 0;
+}
